@@ -1,15 +1,20 @@
 import React from 'react';
 
-type ValidatorType = 'email' | 'minlength' | 'maxlength';
-interface IValidator {
-    type: ValidatorType;
+type ValidatorType = {
+    type: 'email';
     errorMessage: string;
-    minLength?: number;
-    maxLength?: number;
+} | {
+    type: 'minlength';
+    errorMessage: string;
+    minlength: number;
+} | {
+    type: 'maxlength';
+    errorMessage: string;
+    maxlength: number;
 }
 
 interface IRequestValidatorHelper {
-    listValidators: IValidator[];
+    listValidators: ValidatorType[];
     isValidateOnValueChange: boolean;
 }
 
@@ -19,14 +24,13 @@ function isValidEmail(email: string) {
 
 export function useValidatorHelper(request: IRequestValidatorHelper) {
     const [value, setValue] = React.useState('');
-
-    const [errorMessage, setErrorMessage] = React.useState('');
     React.useEffect(() => {
         if (request.isValidateOnValueChange === true) {
             setErrorMessage(validate());
         }
     }, [value]);
-
+    
+    const [errorMessage, setErrorMessage] = React.useState('');
     function validate(): string {
         for(let i = 0; i < request.listValidators.length; i++) {
             const validator = request.listValidators[i];
@@ -37,6 +41,12 @@ export function useValidatorHelper(request: IRequestValidatorHelper) {
                         return validator.errorMessage ?? 'Email is invalid';
                     }
                     break;
+                case 'minlength':
+                    const minlength = validator.minlength > 0 ? validator.minlength : 1;
+                    if (value.length < minlength) {
+                        return validator.errorMessage ?? `Min length is ${minlength} character${minlength > 1 ? 's' : ''}`;
+                    }
+                    break;
             }
         }
         return '';
@@ -44,8 +54,7 @@ export function useValidatorHelper(request: IRequestValidatorHelper) {
 
     return {
         errorMessage,
-        validate,
-        setValue,
+        onChangeText: setValue,
         value,
     }
 }
