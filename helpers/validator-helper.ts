@@ -18,7 +18,6 @@ type ValidatorType = {
     type: 'match';
     errorMessage: string;
     matchValue: string;
-    
 }
 
 interface IRequestValidatorHelper {
