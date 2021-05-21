@@ -20,8 +20,12 @@ function App() {
         isValidateOnValueChange: true,
         listValidators: [{
             type: 'minlength',
-            errorMessage: 'Please enter a value has at least 5 characters.',
+            errorMessage: 'Please enter a value has at least 3 characters.',
             minlength: 3
+        }, {
+            type: 'maxlength',
+            errorMessage: 'Please enter a value has max characters is 5.',
+            maxlength: 5
         }]
     });
     const email = useValidatorHelper({

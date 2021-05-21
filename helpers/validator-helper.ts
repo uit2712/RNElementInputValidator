@@ -47,6 +47,12 @@ export function useValidatorHelper(request: IRequestValidatorHelper) {
                         return validator.errorMessage ?? `Min length is ${minlength} character${minlength > 1 ? 's' : ''}`;
                     }
                     break;
+                case 'maxlength':
+                    const maxlength = validator.maxlength > 0 ? validator.maxlength : 1;
+                    if (value.length > maxlength) {
+                        return validator.errorMessage ?? `Max length is ${maxlength} character${maxlength > 1 ? 's' : ''}`;
+                    }
+                    break;
             }
         }
         return '';
