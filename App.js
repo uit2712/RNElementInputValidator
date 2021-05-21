@@ -8,8 +8,9 @@
 
 import React from 'react';
 import {
-    View,
     StyleSheet,
+    KeyboardAvoidingView,
+    ScrollView,
 } from 'react-native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Input, CheckBox } from 'react-native-elements';
@@ -48,59 +49,74 @@ function App() {
         }]
     });
 
+    const reenterPassword = useValidatorHelper({
+        isValidateOnValueChange: true,
+        listValidators: [{
+            type: 'match',
+            errorMessage: 'Re-enter password is not match.',
+            matchValue: password.value,
+        }]
+    });
+
     return (
-        <View style={styles.container}>
-            <Input
-                placeholder='Name'
-                label='Your Name'
-                errorStyle={{ color: 'red' }}
-                {...name}
-            />
-            <Input
-                placeholder='email@address.com'
-                label='Your Email Address'
-                leftIcon={
-                    <MaterialCommunityIcon
-                        name='email'
-                        size={30}
-                    />
-                }
-                errorStyle={{ color: 'red' }}
-                {...email}
-            />
-            <Input
-                placeholder='Password'
-                label='Your Password'
-                leftIcon={
-                    <MaterialCommunityIcon
-                        name='key-variant'
-                        size={30}
-                    />
-                }
-                secureTextEntry={isShowPassword === false}
-                errorStyle={{ color: 'red' }}
-                {...password}
-            />
-            <Input
-                placeholder='Confirm Password'
-                label='Re-enter password'
-                leftIcon={
-                    <MaterialCommunityIcon
-                        name='key-variant'
-                        size={30}
-                    />
-                }
-                secureTextEntry={isShowPassword === false}
-                errorStyle={{ color: 'red' }}
-                {...password}
-            />
-            <CheckBox
-                right
-                title='Show password'
-                checked={isShowPassword}
-                onPress={() => setIsShowPassword(!isShowPassword)}
-            />
-        </View>
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior='padding'
+            enabled
+        >
+            <ScrollView>
+                <Input
+                    placeholder='Name'
+                    label='Your Name'
+                    errorStyle={{ color: 'red' }}
+                    {...name}
+                />
+                <Input
+                    placeholder='email@address.com'
+                    label='Your Email Address'
+                    leftIcon={
+                        <MaterialCommunityIcon
+                            name='email'
+                            size={30}
+                        />
+                    }
+                    errorStyle={{ color: 'red' }}
+                    {...email}
+                />
+                <Input
+                    placeholder='Password'
+                    label='Your Password'
+                    leftIcon={
+                        <MaterialCommunityIcon
+                            name='key-variant'
+                            size={30}
+                        />
+                    }
+                    secureTextEntry={isShowPassword === false}
+                    errorStyle={{ color: 'red' }}
+                    {...password}
+                />
+                <Input
+                    placeholder='Confirm Password'
+                    label='Re-enter password'
+                    leftIcon={
+                        <MaterialCommunityIcon
+                            name='account-edit'
+                            size={30}
+                        />
+                    }
+                    secureTextEntry={isShowPassword === false}
+                    errorStyle={{ color: 'red' }}
+                    {...reenterPassword}
+                />
+                <CheckBox
+                    right
+                    title='Show password'
+                    checked={isShowPassword}
+                    onPress={() => setIsShowPassword(!isShowPassword)}
+                />
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 };
 

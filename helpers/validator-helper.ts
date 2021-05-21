@@ -14,6 +14,11 @@ type ValidatorType = {
     type: 'function';
     errorMessage: string;
     validate: (value: string) => boolean;
+} | {
+    type: 'match';
+    errorMessage: string;
+    matchValue: string;
+    
 }
 
 interface IRequestValidatorHelper {
@@ -27,7 +32,7 @@ export function useValidatorHelper(request: IRequestValidatorHelper) {
         if (request.isValidateOnValueChange === true) {
             setErrorMessage(validate());
         }
-    }, [value]);
+    }, [value, request.listValidators]);
     
     const [errorMessage, setErrorMessage] = React.useState('');
     function validate(): string {
@@ -50,6 +55,11 @@ export function useValidatorHelper(request: IRequestValidatorHelper) {
                 case 'function':
                     if (validator.validate(value) === false) {
                         return validator.errorMessage ?? 'Please enter a valid value.';
+                    }
+                    break;
+                case 'match':
+                    if (validator.matchValue !== value) {
+                        return validator.errorMessage ?? 'Re-enter password is not match.';
                     }
                     break;
             }
