@@ -14,10 +14,10 @@ import {
 } from 'react-native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Input, CheckBox } from 'react-native-elements';
-import { useValidatorHelper } from './helpers/validator-helper';
+import { useInputValidator } from './helpers/validator-helper';
 
 function App() {
-    const name = useValidatorHelper({
+    const name = useInputValidator({
         listValidators: [{
             type: 'minlength',
             errorMessage: 'Please enter a value has at least __placeholder__ characters.',
@@ -30,7 +30,7 @@ function App() {
             errorMessagePlaceHolder: '__placeholder__',
         }]
     });
-    const email = useValidatorHelper({
+    const email = useInputValidator({
         listValidators: [{
             type: 'function',
             errorMessage: 'Please enter a valid email adress.',
@@ -38,7 +38,7 @@ function App() {
         }]
     });
     const [isShowPassword, setIsShowPassword] = React.useState(false);
-    const password = useValidatorHelper({
+    const password = useInputValidator({
         listValidators: [{
             type: 'function',
             errorMessage: 'Please enter a password has at least one character and one number.',
@@ -46,13 +46,20 @@ function App() {
         }]
     });
 
-    const reenterPassword = useValidatorHelper({
+    const reenterPassword = useInputValidator({
         listValidators: [{
             type: 'match',
             errorMessage: 'Re-enter password is not match.',
             matchValue: password.value,
         }]
     });
+
+    const form = {
+        name,
+        email,
+        password,
+        reenterPassword,
+    };
 
     return (
         <KeyboardAvoidingView
@@ -65,7 +72,7 @@ function App() {
                     placeholder='Name'
                     label='Your Name'
                     errorStyle={{ color: 'red' }}
-                    {...name}
+                    {...form.name}
                 />
                 <Input
                     placeholder='email@address.com'
@@ -77,7 +84,7 @@ function App() {
                         />
                     }
                     errorStyle={{ color: 'red' }}
-                    {...email}
+                    {...form.email}
                 />
                 <Input
                     placeholder='Password'
@@ -90,7 +97,7 @@ function App() {
                     }
                     secureTextEntry={isShowPassword === false}
                     errorStyle={{ color: 'red' }}
-                    {...password}
+                    {...form.password}
                 />
                 <Input
                     placeholder='Confirm Password'
@@ -103,7 +110,7 @@ function App() {
                     }
                     secureTextEntry={isShowPassword === false}
                     errorStyle={{ color: 'red' }}
-                    {...reenterPassword}
+                    {...form.reenterPassword}
                 />
                 <CheckBox
                     right

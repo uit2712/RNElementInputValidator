@@ -20,15 +20,21 @@ type ValidatorType = {
     matchValue: string;
 }
 
-interface IRequestValidatorHelper {
+interface IRequestInputValidator {
     listValidators: ValidatorType[];
     isValidateImmediate?: boolean;
 }
 
-export function useValidatorHelper(request: IRequestValidatorHelper = {
+interface IResponseInputValidator {
+    errorMessage: string;
+    onChangeText: (value: string) => void;
+    value: string;
+}
+
+export function useInputValidator(request: IRequestInputValidator = {
     listValidators: [],
     isValidateImmediate: false,
-}) {
+}) : IResponseInputValidator {
     const [value, setValue] = React.useState('');
 
     const [isDirty, setIsDirty] = React.useState(false);
