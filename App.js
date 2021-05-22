@@ -11,6 +11,7 @@ import {
     StyleSheet,
     KeyboardAvoidingView,
     ScrollView,
+    ToastAndroid,
 } from 'react-native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Input, CheckBox, Button } from 'react-native-elements';
@@ -54,7 +55,10 @@ function App() {
         }]
     });
 
-    const form = useFormValidator([name, email, password, reenterPassword]);
+    const form = useFormValidator({
+        inputs: [name, email, password, reenterPassword],
+        isFocusErrorInput: true,
+    });
 
     return (
         <KeyboardAvoidingView
@@ -64,12 +68,14 @@ function App() {
         >
             <ScrollView>
                 <Input
+                    ref={name.ref}
                     placeholder='Name'
                     label='Your Name'
                     errorStyle={{ color: 'red' }}
                     {...name.props}
                 />
                 <Input
+                    ref={email.ref}
                     placeholder='email@address.com'
                     label='Your Email Address'
                     leftIcon={
@@ -82,6 +88,7 @@ function App() {
                     {...email.props}
                 />
                 <Input
+                    ref={password.ref}
                     placeholder='Password'
                     label='Your Password'
                     leftIcon={
@@ -95,6 +102,7 @@ function App() {
                     {...password.props}
                 />
                 <Input
+                    ref={reenterPassword.ref}
                     placeholder='Confirm Password'
                     label='Re-enter password'
                     leftIcon={

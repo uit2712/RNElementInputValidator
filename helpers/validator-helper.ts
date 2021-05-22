@@ -31,15 +31,23 @@ interface IResponseInputValidatorProps {
     value: string;
 }
 
+interface IResponseValidate {
+    ref: React.MutableRefObject<any>;
+    isValid: boolean;
+}
+
 interface IResponseInputValidator {
     props: IResponseInputValidatorProps;
-    validate: () => void;
+    validate: () => IResponseValidate;
+    isValid: boolean;
+    ref: React.MutableRefObject<any>;
 }
 
 export function useInputValidator(request: IRequestInputValidator = {
     listValidators: [],
     isValidateImmediate: false,
 }): IResponseInputValidator {
+    const ref = React.useRef(null);
     const [value, setValue] = React.useState('');
 
     const [isDirty, setIsDirty] = React.useState(false);
@@ -98,14 +106,56 @@ export function useInputValidator(request: IRequestInputValidator = {
             onChangeText: setValue,
             value,
         },
-        validate: () => setErrorMessage(validate()),
+        validate: () => {
+            const errorMessage = validate();
+            setErrorMessage(errorMessage)
+            return {
+                ref,
+                isValid: errorMessage === '',
+            };
+        },
+        isValid: errorMessage === '' && value !== '',
+        ref,
     }
 }
 
-export function useFormValidator(request: IResponseInputValidator[]) {
+interface IRequestFormValidator {
+    inputs: IResponseInputValidator[];
+    isFocusErrorInput?: boolean;
+}
+
+export function useFormValidator(request: IRequestFormValidator = {
+    inputs: [],
+    isFocusErrorInput: false,
+}) {
+    const [isValid, setIsValid] = React.useState(checkIfValid());
+    function checkIfValid() {
+        for (let i = 0; i < request.inputs.length; i++) {
+            if (request.inputs[i].isValid === false) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    React.useEffect(() => {
+        setIsValid(checkIfValid());
+    }, [request.inputs]);
+
     return {
         validate: () => {
-            request.forEach(item => item.validate());
-        }
+            let refErrorInput: React.MutableRefObject<any> = null;
+            for (let i = 0; i < request.inputs.length; i++) {
+                const result = request.inputs[i].validate();
+                if (result.isValid === false) {
+                    if (request.isFocusErrorInput === true && !refErrorInput) {
+                        refErrorInput = result.ref;
+                    }
+                }
+            }
+
+            refErrorInput?.current?.focus();
+        },
+        isValid,
     }
 }
