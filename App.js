@@ -13,8 +13,8 @@ import {
     ScrollView,
 } from 'react-native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Input, CheckBox } from 'react-native-elements';
-import { useInputValidator } from './helpers/validator-helper';
+import { Input, CheckBox, Button } from 'react-native-elements';
+import { useFormValidator, useInputValidator } from './helpers/validator-helper';
 
 function App() {
     const name = useInputValidator({
@@ -50,16 +50,11 @@ function App() {
         listValidators: [{
             type: 'match',
             errorMessage: 'Re-enter password is not match.',
-            matchValue: password.value,
+            matchValue: password.props.value,
         }]
     });
 
-    const form = {
-        name,
-        email,
-        password,
-        reenterPassword,
-    };
+    const form = useFormValidator([name, email, password, reenterPassword]);
 
     return (
         <KeyboardAvoidingView
@@ -72,7 +67,7 @@ function App() {
                     placeholder='Name'
                     label='Your Name'
                     errorStyle={{ color: 'red' }}
-                    {...form.name}
+                    {...name.props}
                 />
                 <Input
                     placeholder='email@address.com'
@@ -84,7 +79,7 @@ function App() {
                         />
                     }
                     errorStyle={{ color: 'red' }}
-                    {...form.email}
+                    {...email.props}
                 />
                 <Input
                     placeholder='Password'
@@ -97,7 +92,7 @@ function App() {
                     }
                     secureTextEntry={isShowPassword === false}
                     errorStyle={{ color: 'red' }}
-                    {...form.password}
+                    {...password.props}
                 />
                 <Input
                     placeholder='Confirm Password'
@@ -110,13 +105,17 @@ function App() {
                     }
                     secureTextEntry={isShowPassword === false}
                     errorStyle={{ color: 'red' }}
-                    {...form.reenterPassword}
+                    {...reenterPassword.props}
                 />
                 <CheckBox
                     right
                     title='Show password'
                     checked={isShowPassword}
                     onPress={() => setIsShowPassword(!isShowPassword)}
+                />
+                <Button
+                    title='Sign Up'
+                    onPress={form.validate}
                 />
             </ScrollView>
         </KeyboardAvoidingView>

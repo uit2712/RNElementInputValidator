@@ -25,16 +25,21 @@ interface IRequestInputValidator {
     isValidateImmediate?: boolean;
 }
 
-interface IResponseInputValidator {
+interface IResponseInputValidatorProps {
     errorMessage: string;
     onChangeText: (value: string) => void;
     value: string;
 }
 
+interface IResponseInputValidator {
+    props: IResponseInputValidatorProps;
+    validate: () => void;
+}
+
 export function useInputValidator(request: IRequestInputValidator = {
     listValidators: [],
     isValidateImmediate: false,
-}) : IResponseInputValidator {
+}): IResponseInputValidator {
     const [value, setValue] = React.useState('');
 
     const [isDirty, setIsDirty] = React.useState(false);
@@ -88,8 +93,19 @@ export function useInputValidator(request: IRequestInputValidator = {
     }
 
     return {
-        errorMessage,
-        onChangeText: setValue,
-        value,
+        props: {
+            errorMessage,
+            onChangeText: setValue,
+            value,
+        },
+        validate: () => setErrorMessage(validate()),
+    }
+}
+
+export function useFormValidator(request: IResponseInputValidator[]) {
+    return {
+        validate: () => {
+            request.forEach(item => item.validate());
+        }
     }
 }
