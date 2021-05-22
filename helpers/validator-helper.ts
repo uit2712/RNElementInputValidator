@@ -22,10 +22,13 @@ type ValidatorType = {
 
 interface IRequestValidatorHelper {
     listValidators: ValidatorType[];
-    isValidateImmediate: boolean;
+    isValidateImmediate?: boolean;
 }
 
-export function useValidatorHelper(request: IRequestValidatorHelper) {
+export function useValidatorHelper(request: IRequestValidatorHelper = {
+    listValidators: [],
+    isValidateImmediate: false,
+}) {
     const [value, setValue] = React.useState('');
 
     const [isDirty, setIsDirty] = React.useState(false);
