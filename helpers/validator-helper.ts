@@ -22,16 +22,28 @@ type ValidatorType = {
 
 interface IRequestValidatorHelper {
     listValidators: ValidatorType[];
-    isValidateOnValueChange: boolean;
+    isValidateImmediate: boolean;
 }
 
 export function useValidatorHelper(request: IRequestValidatorHelper) {
     const [value, setValue] = React.useState('');
+
+    const [isDirty, setIsDirty] = React.useState(false);
     React.useEffect(() => {
-        if (request.isValidateOnValueChange === true) {
-            setErrorMessage(validate());
+        if (isDirty === false && value !== '') {
+            setIsDirty(true);
         }
-    }, [value, request.listValidators]);
+    }, [value]);
+
+    React.useEffect(() => {
+        if (request.isValidateImmediate === true) {
+            setErrorMessage(validate());
+        } else {
+            if (isDirty === true) {
+                setErrorMessage(validate());
+            }
+        }
+    }, [isDirty, value, request.listValidators]);
     
     const [errorMessage, setErrorMessage] = React.useState('');
     function validate(): string {

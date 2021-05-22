@@ -18,7 +18,7 @@ import { useValidatorHelper } from './helpers/validator-helper';
 
 function App() {
     const name = useValidatorHelper({
-        isValidateOnValueChange: true,
+        isValidateImmediate: false,
         listValidators: [{
             type: 'minlength',
             errorMessage: 'Please enter a value has at least __placeholder__ characters.',
@@ -32,7 +32,7 @@ function App() {
         }]
     });
     const email = useValidatorHelper({
-        isValidateOnValueChange: true,
+        isValidateImmediate: false,
         listValidators: [{
             type: 'function',
             errorMessage: 'Please enter a valid email adress.',
@@ -41,7 +41,7 @@ function App() {
     });
     const [isShowPassword, setIsShowPassword] = React.useState(false);
     const password = useValidatorHelper({
-        isValidateOnValueChange: true,
+        isValidateImmediate: false,
         listValidators: [{
             type: 'function',
             errorMessage: 'Please enter a password has at least one character and one number.',
@@ -50,7 +50,7 @@ function App() {
     });
 
     const reenterPassword = useValidatorHelper({
-        isValidateOnValueChange: true,
+        isValidateImmediate: false,
         listValidators: [{
             type: 'match',
             errorMessage: 'Re-enter password is not match.',
